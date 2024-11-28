@@ -4,7 +4,7 @@ import pandas as pd
 import math
 
 # Cargar el modelo y los datos
-with open('mica\recommend_model.pkl', 'rb') as file:
+with open('mica\Datos\recommend_model.pkl','rb') as file:
     data = pickle.load(file)
     df_business = data['df_business']  # Data de negocios
 
