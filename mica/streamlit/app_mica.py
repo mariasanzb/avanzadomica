@@ -12,6 +12,7 @@ with open('recommend_model.pkl', 'rb') as file:
 def pearson_similarity(person1, person2, data):
     common_ranked_items = [itm for itm in data[person1] if itm in data[person2]]
     n = len(common_ranked_items)
+
     s1 = sum([data[person1][item] for item in common_ranked_items])
     s2 = sum([data[person2][item] for item in common_ranked_items])
     ss1 = sum([pow(data[person1][item], 2) for item in common_ranked_items])
