@@ -2,11 +2,17 @@ import streamlit as st
 import pickle
 import pandas as pd
 import math
+import os
 
-# Cargar el modelo y los datos
-with open('mica\Datos\recommend_model.pkl','rb') as file:
+model_path = os.path.join(os.path.dirname(__file__), '../Datos/recommend_model.pkl')
+
+# Abrir el archivo
+with open(model_path, 'rb') as file:
     data = pickle.load(file)
-    df_business = data['df_business']  # Data de negocios
+# Cargar el modelo y los datos
+#with open('mica\Datos\recommend_model.pkl','rb') as file:
+    #data = pickle.load(file)
+    #df_business = data['df_business']  # Data de negocios
 
 # Función de similitud de Pearson
 def pearson_similarity(person1, person2, data):
