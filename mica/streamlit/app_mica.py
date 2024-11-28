@@ -4,19 +4,6 @@ import pandas as pd
 import math
 import os
 
-with open('../Datos/recommend_model.pkl', 'rb') as file:
-    data = pickle.load(file)
-
-df_business = data['df_business']  # Data de negocios
-data = data['data']
-
-df_reviews = pd.read_parquet('../reviews.parquet', engine='pyarrow')
-data = df_reviews.groupby("user_id").apply(
-    lambda x: dict(zip(x["business_id"], x["stars"]))
-).to_dict()
-
-df_business= pd.read_parquet('../business.parquet', engine='pyarrow')
-
 # Definiciones de funciones necesarias para la deserialización
 def pearson_similarity(person1, person2, data):
     common_ranked_items = [itm for itm in data[person1] if itm in data[person2]]
