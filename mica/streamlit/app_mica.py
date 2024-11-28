@@ -9,6 +9,7 @@ model_path = os.path.join(os.path.dirname(__file__), '../Datos/recommend_model.p
 # Abrir el archivo
 with open(model_path, 'rb') as file:
     data = pickle.load(file)
+    df_business = data['df_business'] 
 # Cargar el modelo y los datos
 #with open('mica\Datos\recommend_model.pkl','rb') as file:
     #data = pickle.load(file)
