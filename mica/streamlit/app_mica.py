@@ -4,7 +4,7 @@ import pandas as pd
 import math
 import os
 
-with open('modelo_recomendacion.pkl', 'rb') as file:
+with open('recommend_model.pkl.pkl', 'rb') as file:
     data = pickle.load(file)
 
 df_business = data['df_business']  # Data de negocios
