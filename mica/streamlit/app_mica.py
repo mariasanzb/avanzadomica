@@ -79,7 +79,7 @@ with open(model_path, 'rb') as file:
     data = pickle.load(file)
 
 df_business = data['df_business']
-
+data = data['data']
 
 # Cargar el modelo y los datos
 #with open('mica\Datos\recommend_model.pkl','rb') as file:
