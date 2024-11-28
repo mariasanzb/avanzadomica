@@ -37,49 +37,31 @@ def normalize_rating(rating, min_rating=1, max_rating=5):
     return max(min_rating, min(max_rating, normalized_rating))
 
 def recommend(person, bound, data, df_business):
-    # Calculamos la similitud con todos los demás usuarios
     scores = [(pearson_similarity(person, other, data), other) for other in data if other != person]
-
-    # Ordenamos los puntajes en orden descendente (de mayor a menor similitud)
     scores.sort(reverse=True, key=lambda x: x[0])
+    scores = scores[:bound]
 
-    # Crear un diccionario de negocios recomendados
     recs = {}
     for sim, other in scores:
-        ranked = data[other]  # Obtén los negocios recomendados
+        ranked = data[other]
         for itm in ranked:
-            if itm not in data[person]:  # Solo recomendar negocios no evaluados por la persona
-                # Calcular el peso de la recomendación
+            if itm not in data[person]:
                 weight = sim * ranked[itm]
                 if itm in recs:
-                    recs[itm] += weight  # Acumular el puntaje
+                    recs[itm] += weight
                 else:
                     recs[itm] = weight
 
-    # Ordenar los negocios recomendados por el puntaje (de mayor a menor)
     recs_sorted = sorted(recs.items(), key=lambda x: x[1], reverse=True)
-
-    # Filtrar los negocios que están en df_business
     filtered_business_ids = [b_id for b_id, _ in recs_sorted if b_id in df_business['business_id'].values]
-
-    # Asegurarse de que el número de negocios recomendados no exceda el 'bound'
     filtered_business_ids = filtered_business_ids[:bound]
 
-    # Crear una lista para almacenar los datos recomendados
     recommended_business_data = []
-
-    # Iterar sobre los business_id recomendados
     for business_id in filtered_business_ids:
-        # Obtener el nombre, dirección y ciudad desde df_business
         business_info = df_business[df_business['business_id'] == business_id].iloc[0]
-        
-        # Obtener la recomendación (rating) desde recs
         rating = recs.get(business_id, 0)
-        
-        # Normalizar el rating al rango de 1 a 5
         normalized_rating = normalize_rating(rating)
-        
-        # Añadir la información a la lista
+
         recommended_business_data.append({
             'business_id': business_id,
             'name': business_info['name'],
@@ -88,16 +70,15 @@ def recommend(person, bound, data, df_business):
             'rating': normalized_rating
         })
 
-    # Convertir la lista en un DataFrame
     recommended_business_info = pd.DataFrame(recommended_business_data)
-
     return recommended_business_info
+
 # Cargar el modelo
 model_path = os.path.join(os.path.dirname(__file__), '../Datos/recommend_model.pkl')
 with open(model_path, 'rb') as file:
     data = pickle.load(file)
-    df_business = data['df_business']
 
+df_business = data['df_business']
 
 
 # Cargar el modelo y los datos
@@ -204,4 +185,3 @@ if st.button("Obtener Recomendaciones"):
 
     else:
         st.error("El ID de usuario ingresado no existe.")
-
